@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>UF.7 - Votação</title>
+<style>
+body{font-family:Arial;background:#0f0f0f;color:#fff;text-align:center}
+.card{background:#1c1c1c;padding:20px;margin:10px auto;width:320px;border-radius:10px}
+button{padding:10px;margin-top:10px;border:none;border-radius:5px;cursor:pointer}
+.vote{background:green;color:white}
+a{color:lightblue}
+</style>
+</head>
+<body>
+
+<h1>🗳️ UF.7 - Votação</h1>
+
+<div id="container"></div>
+
+<p id="msg"></p>
+
+<br>
+<a href="admin.html">🔐 Painel Admin</a>
+
+<script>
+let votes = JSON.parse(localStorage.getItem("votes")) || {};
+let voted = localStorage.getItem("voted");
+
+let candidates = JSON.parse(localStorage.getItem("candidates")) || [
+    "Candidato A",
+    "Candidato B",
+    "Candidato C"
+];
+
+function initVotes(){
+    candidates.forEach(c=>{
+        if(votes[c] === undefined) votes[c]=0;
+    });
+    localStorage.setItem("votes", JSON.stringify(votes));
+}
+initVotes();
+
+function render(){
+    let container = document.getElementById("container");
+    container.innerHTML = "";
+
+    candidates.forEach(c=>{
+        let div = document.createElement("div");
+        div.className="card";
+        div.innerHTML = `<h3>${c}</h3>
+        <button class='vote' onclick="vote('${c}')">Votar</button>`;
+        container.appendChild(div);
+    });
+}
+render();
+
+function vote(cand){
+    if(voted){
+        document.getElementById("msg").innerText="❌ Você já votou!";
+        return;
+    }
+
+    votes[cand]++;
+    localStorage.setItem("votes", JSON.stringify(votes));
+    localStorage.setItem("voted", "true");
+
+    document.getElementById("msg").innerText="✅ Voto registrado!";
+}
+</script>
+
+</body>
+</html>
